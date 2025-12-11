@@ -15,6 +15,7 @@ class QueryRequest(BaseModel):
 class QueryResponse(BaseModel):
     response: str
     session_id: str
+    request_id: str
 
 
 class ErrorResponse(BaseModel):
@@ -47,8 +48,8 @@ def ask(request: QueryRequest, x_session_id: Optional[str] = Header(None, alias=
     session_id = x_session_id or request.session_id or "default"
     
     try:
-        response, session_id = process_query(session_id, request.query)
-        return QueryResponse(response=response, session_id=session_id)
+        response, session_id, request_id = process_query(session_id, request.query)
+        return QueryResponse(response=response, session_id=session_id, request_id=request_id)
     except Exception as e:
         from utils.logger import log_conversation
         log_conversation(session_id, request.query, "", error=str(e))

@@ -2,6 +2,7 @@ import logging
 import functools
 from datetime import datetime
 from typing import Optional, Callable, Any
+from contextvars import ContextVar
 
 # Configure logging
 logging.basicConfig(
@@ -11,15 +12,28 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+# Context variable for request ID (works across threads/async)
+_request_id_var: ContextVar[Optional[str]] = ContextVar('request_id', default=None)
+
+def set_request_id(request_id: str):
+    """Set the current request ID in context variable"""
+    _request_id_var.set(request_id)
+
+def get_request_id() -> Optional[str]:
+    """Get the current request ID from context variable"""
+    return _request_id_var.get()
+
 
 def log_tool_call(func: Callable) -> Callable:
     """
     Decorator to automatically log tool calls.
     Logs [TOOL START], [TOOL END], and [TOOL ERROR] for all tool functions.
+    Also stores tool calls in Redis if request_id is available.
     """
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         tool_name = func.__name__
+        request_id = get_request_id()
         
         # Format arguments for logging
         args_str = ", ".join([str(arg) for arg in args])
@@ -41,11 +55,34 @@ def log_tool_call(func: Callable) -> Callable:
             # Log tool end
             logger.info(f"[TOOL END] {tool_name}: {result_str}")
             
+            # Store tool call in Redis if request_id is available
+            if request_id:
+                try:
+                    from storage import memory_store
+                    if memory_store:
+                        memory_store.add_tool_call(request_id, tool_name, all_args, str(result))
+                    else:
+                        logger.warning(f"[TOOL STORE FAILED] memory_store is None for request_id: {request_id}")
+                except Exception as e:
+                    logger.error(f"[TOOL STORE ERROR] Failed to store tool call: {e}", exc_info=True)
+            else:
+                logger.warning(f"[TOOL NO REQUEST_ID] tool={tool_name} - no request_id available")
+            
             return result
             
         except Exception as e:
             # Log tool error
             logger.error(f"[TOOL ERROR] {tool_name}: {str(e)}")
+            
+            # Store error in Redis if request_id is available
+            if request_id:
+                try:
+                    from storage import memory_store
+                    if memory_store:
+                        memory_store.add_tool_call(request_id, tool_name, all_args, f"ERROR: {str(e)}")
+                except Exception:
+                    pass
+            
             raise
     
     return wrapper
