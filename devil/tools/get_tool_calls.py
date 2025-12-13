@@ -7,8 +7,12 @@ def get_tool_calls(request_id: str) -> str:
     Get all tool calls (input/output) for a specific request ID.
     Use this to see what tools were executed and their results for a particular request.
     
+    CRITICAL: You CANNOT make up or guess the request_id. You MUST first use the 'search_memory' tool 
+    to find messages, which will return request IDs in the metadata (shown as [Request ID: ...]). 
+    Only then can you use that actual request_id with this tool. Do NOT use tool names or make up IDs.
+    
     Args:
-        request_id: The request ID to fetch tool calls for
+        request_id: The actual request ID (UUID format) obtained from search_memory tool's metadata
         
     Returns:
         Formatted string with all tool calls for the request

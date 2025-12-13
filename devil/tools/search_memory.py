@@ -2,9 +2,9 @@ from storage import memory_store
 from utils.logger import log_tool_call
 
 @log_tool_call
-def search_memory(session_id: str, offset: int = 0, limit: int = 10, keyword: str = None) -> str:
+def search_memory( offset: int = 0, limit: int = 10, keyword: str = None) -> str:
     """
-    Search conversation memory/history for a specific session.
+    Search conversation memory/history.
     Use this tool ONLY when you need to recall specific past conversations 
     or when the user specifically asks about previous conversations about specific topics.
     
@@ -12,7 +12,6 @@ def search_memory(session_id: str, offset: int = 0, limit: int = 10, keyword: st
     so only use this tool if you need to search beyond that or need to recall past conversation about specific topics.
     
     Args:
-        session_id: Session identifier (usually "default" if not specified)
         offset: Number of messages to skip (for pagination, default: 0). Ignored if keyword is provided.
         limit: Maximum number of messages to return (default: 10, max: 50)
         keyword: Optional keyword to search for in message content. If provided, searches all messages and returns matching results up to limit (offset is ignored).
@@ -20,6 +19,7 @@ def search_memory(session_id: str, offset: int = 0, limit: int = 10, keyword: st
     Returns:
         Formatted string with conversation history
     """
+    session_id = "default"
     if not memory_store:
         return "Memory store not available (Redis not connected)"
     
@@ -50,7 +50,9 @@ def search_memory(session_id: str, offset: int = 0, limit: int = 10, keyword: st
                 role = msg.get("role", "unknown")
                 content = msg.get("content", "")
                 timestamp = msg.get("timestamp", "")
-                result += f"[{i}] {role.upper()} ({timestamp}): {content[:200]}{'...' if len(content) > 200 else ''}\n\n"
+                metadata = msg.get("metadata", {})
+                request_id = metadata.get("request_id", "N/A")
+                result += f"[{i}] {role.upper()} ({timestamp}) [Request ID: {request_id}]: {content}\n\n"
             
             return result
         else:
@@ -69,7 +71,9 @@ def search_memory(session_id: str, offset: int = 0, limit: int = 10, keyword: st
                 role = msg.get("role", "unknown")
                 content = msg.get("content", "")
                 timestamp = msg.get("timestamp", "")
-                result += f"[{i}] {role.upper()} ({timestamp}): {content[:200]}{'...' if len(content) > 200 else ''}\n\n"
+                metadata = msg.get("metadata", {})
+                request_id = metadata.get("request_id", "N/A")
+                result += f"[{i}] {role.upper()} ({timestamp}) [Request ID: {request_id}]: {content}\n\n"
             
             return result
         
