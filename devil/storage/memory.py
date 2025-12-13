@@ -63,4 +63,28 @@ class MemoryStore:
         
         # Return in chronological order (oldest first)
         return list(reversed(tool_calls))
+    
+    def get_all_sessions(self) -> List[Dict]:
+        """Get all session IDs with their last message"""
+        sessions = []
+        pattern = f"{self.conversation_key}:*"
+        
+        cursor = 0
+        while True:
+            cursor, keys = self.redis.scan(cursor, match=pattern, count=100)
+            for key in keys:
+                session_id = key.replace(f"{self.conversation_key}:", "")
+                # Get the last message
+                messages = self.get_messages(session_id, limit=1)
+                last_message = messages[0].get("content", "") if messages else ""
+                
+                sessions.append({
+                    "session_id": session_id,
+                    "last_message": last_message
+                })
+            
+            if cursor == 0:
+                break
+        
+        return sessions
   
