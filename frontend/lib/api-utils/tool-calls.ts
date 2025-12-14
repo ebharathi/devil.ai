@@ -1,6 +1,5 @@
 import { ToolCallsResponse } from './types'
-
-const API_BASE_URL = 'http://localhost:5000/api/v1'
+import { API_BASE_URL } from '@/constant'
 
 export async function getToolCalls(requestId: string): Promise<ToolCallsResponse> {
   const response = await fetch(`${API_BASE_URL}/tool-calls/${requestId}`, {

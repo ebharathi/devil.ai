@@ -1,7 +1,5 @@
 import { QueryRequest, QueryResponse } from './types'
-
-const API_BASE_URL = 'http://localhost:5000/api/v1'
-
+import { API_BASE_URL } from '@/constant'
 export async function sendMessage(
   query: string,
   sessionId?: string

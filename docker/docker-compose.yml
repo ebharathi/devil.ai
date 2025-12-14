@@ -10,16 +10,22 @@ services:
     command: redis-server --appendonly yes
 
   agent:
-    build: .
+    build: ../devil
     ports:
       - "5000:5000"
     env_file: 
-      - .env
+      - ../devil/.env
     privileged: true
     volumes:
       - /:/host:ro  # Read-only access to entire host filesystem,modify this to allow full Access
     depends_on:
       - redis
+
+  web:
+    build: ../frontend
+    ports:
+      - "56789:56789"
+    
 
 volumes:
   redis_data:
