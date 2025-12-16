@@ -6,8 +6,8 @@ import Footer from '@/components/Footer'
 import ParticleBackground from '@/components/ParticleBackground'
 import MatrixRain from '@/components/MatrixRain'
 import TerminalWindow from '@/components/TerminalWindow'
-import Floating3DElements from '@/components/Floating3DElements'
 import MouseParticles from '@/components/MouseParticles'
+import AnonymousMaskSimple from '@/components/AnonymousMaskSimple'
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
       {/* INSANE BACKGROUND EFFECTS */}
       <ParticleBackground />
       <MatrixRain />
-      <Floating3DElements />
+      <AnonymousMaskSimple />
       <MouseParticles />
       
       {/* Animated gradient mesh */}

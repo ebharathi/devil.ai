@@ -39,6 +39,7 @@ export default function MatrixRain() {
     let animationFrameId: number
 
     function draw() {
+      if (!ctx || !canvas) return
       // Semi-transparent black background for trail effect
       ctx.fillStyle = 'rgba(15, 23, 42, 0.05)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -53,25 +54,29 @@ export default function MatrixRain() {
         
         // Draw character
         ctx.fillStyle = color
-        ctx.font = `${fontSize}px "JetBrains Mono", monospace`
+        ctx.font = `${fontSize}px monospace`
         ctx.fillText(char, i * fontSize, drops[i])
         
         // Move drop down
         drops[i] += fontSize
         
-        // Reset drop if it goes off screen
+        // Reset drop if it goes beyond bottom
         if (drops[i] > canvas.height && Math.random() > 0.975) {
           drops[i] = 0
         }
       }
-
-      animationFrameId = requestAnimationFrame(draw)
     }
 
-    draw()
+    function animate() {
+      draw()
+      animationFrameId = requestAnimationFrame(animate)
+    }
+
+    animate()
 
     // Handle resize
-    const handleResize = () => {
+    function handleResize() {
+      if (!canvas) return
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
     }
@@ -79,15 +84,15 @@ export default function MatrixRain() {
     window.addEventListener('resize', handleResize)
 
     return () => {
-      cancelAnimationFrame(animationFrameId)
       window.removeEventListener('resize', handleResize)
+      cancelAnimationFrame(animationFrameId)
     }
   }, [])
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 -z-5 opacity-20 pointer-events-none"
+      className="fixed inset-0 pointer-events-none -z-1 opacity-30"
     />
   )
 }
