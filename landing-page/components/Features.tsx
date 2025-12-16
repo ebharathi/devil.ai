@@ -16,7 +16,7 @@ const features = [
   {
     icon: Terminal,
     title: 'FULL ROOT ACCESS',
-    description: 'Complete system control like a hacker with root privileges. Read, write, modify, delete any file.',
+    description: 'Complete system control with root privileges. Read, write, modify any file.',
     color: 'primary',
     badge: 'ROOT LEVEL',
     glow: 'glow'
@@ -39,8 +39,8 @@ const features = [
   },
   {
     icon: Network,
-    title: 'NETWORK DOMINATION',
-    description: 'Control network interfaces, sniff traffic, modify routing, manage firewalls, port scanning.',
+    title: 'NETWORK MANAGEMENT',
+    description: 'Control network interfaces, manage traffic, modify routing, manage firewalls, port management.',
     color: 'blue',
     badge: 'NETWORK',
     glow: 'glow'
@@ -63,8 +63,8 @@ const features = [
   },
   {
     icon: Key,
-    title: 'SECURITY BYPASS',
-    description: 'Analyze security measures, find vulnerabilities, bypass restrictions, test defenses.',
+    title: 'SECURITY ANALYSIS',
+    description: 'Analyze security measures, find vulnerabilities, test defenses, security assessment.',
     color: 'red',
     badge: 'HACKER',
     glow: 'glow-red'
@@ -79,27 +79,27 @@ const features = [
   },
   {
     icon: Fingerprint,
-    title: 'IDENTITY ASSUMPTION',
-    description: 'Assume any user identity, bypass authentication, access protected resources.',
+    title: 'IDENTITY MANAGEMENT',
+    description: 'Manage user identities, handle authentication, access protected resources.',
     color: 'red',
     badge: 'IDENTITY',
     glow: 'glow-red'
   },
   {
     icon: Binary,
-    title: 'BINARY MANIPULATION',
-    description: 'Modify executables, patch memory, inject code, reverse engineer applications.',
+    title: 'BINARY ANALYSIS',
+    description: 'Analyze executables, patch memory, code review, reverse engineer applications.',
     color: 'green',
     badge: 'BINARY',
     glow: 'glow-green'
   },
   {
-    icon: ShieldOff,
-    title: 'SECURITY DISABLING',
-    description: 'Disable firewalls, turn off antivirus, bypass security software, remove protections.',
-    color: 'red',
-    badge: 'UNPROTECTED',
-    glow: 'glow-red'
+    icon: Shield,
+    title: 'SYSTEM PROTECTION',
+    description: 'Manage firewalls, configure antivirus, implement security software, system hardening.',
+    color: 'green',
+    badge: 'PROTECTION',
+    glow: 'glow-green'
   },
 ]
 
@@ -122,7 +122,7 @@ export default function Features() {
         >
           <div className="inline-flex items-center space-x-2 px-4 py-2 bg-red-500/10 rounded-full border border-red-500/20 mb-6">
             <AlertTriangle className="w-4 h-4 text-red-500" />
-            <span className="text-sm font-bold text-red-500">WARNING: NO SAFETY RAILS</span>
+            <span className="text-sm font-bold text-red-500">ADVANCED CAPABILITIES</span>
           </div>
           
           <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">

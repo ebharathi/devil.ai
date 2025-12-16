@@ -1,6 +1,6 @@
 'use client'
 
-import { Terminal, Shield, Zap, ArrowRight, Github, Code, Cpu, Brain, Sparkles, Rocket, Eye, Skull } from 'lucide-react'
+import { Terminal, Shield, Zap, ArrowRight, Github, Code, Cpu, Brain, Sparkles, Rocket, Eye, AlertTriangle } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import GlitchText from './GlitchText'
@@ -9,11 +9,11 @@ const typingTexts = [
   'UNRESTRICTED SYSTEM ACCESS',
   'FULL ROOT CAPABILITIES',
   'NO SAFETY RAILS',
-  'HACKER-LEVEL CONTROL',
+  'ADVANCED SYSTEM CONTROL',
   'MODIFY ANYTHING, ANYWHERE',
   'OPEN SOURCE POWER',
-  'TERMINAL GOD MODE',
-  'SYSTEM DOMINATION',
+  'TERMINAL ACCESS MODE',
+  'SYSTEM MANAGEMENT',
 ]
 
 export default function Hero() {
@@ -79,7 +79,7 @@ export default function Hero() {
               transition={{ duration: 0.5 }}
             >
               <div className="inline-flex items-center space-x-2 px-4 py-2 bg-red-500/10 rounded-full border border-red-500/20 glow-red">
-                <Skull className="w-4 h-4 text-red-500 animate-pulse" />
+                <AlertTriangle className="w-4 h-4 text-red-500 animate-pulse" />
                 <span className="text-sm font-medium text-red-500">NO RESTRICTIONS</span>
               </div>
               <div className="inline-flex items-center space-x-2 px-4 py-2 bg-green-500/10 rounded-full border border-green-500/20 glow-green">
@@ -117,7 +117,7 @@ export default function Hero() {
               transition={{ delay: 0.3 }}
             >
               The <span className="text-red-500 font-bold neon-pulse">unrestricted AI agent</span> with{' '}
-              <span className="text-primary font-bold">hacker-level system control</span>
+              <span className="text-primary font-bold">advanced system control</span>
             </motion.p>
 
             {/* Creator Note - CYBER STYLE */}
@@ -159,7 +159,7 @@ export default function Hero() {
               </div>
             </motion.div>
 
-            {/* Description - HACKER STYLE */}
+            {/* Description - ADVANCED STYLE */}
             <motion.div 
               className="text-lg md:text-xl text-gray-400 max-w-4xl mx-auto mb-8"
               initial={{ opacity: 0 }}
@@ -173,7 +173,7 @@ export default function Hero() {
                     <span className="font-bold text-red-500">NO LIMITS</span>
                   </div>
                   <p>
-                    Unlike limited AI agents, I have <span className="text-red-500 font-bold">full system access</span> - read, write, modify, delete, monitor, and control any system.
+                    Unlike limited AI agents, I have <span className="text-red-500 font-bold">full system access</span> - read, write, modify, monitor, and control any system.
                   </p>
                 </div>
                 <div className="p-6 bg-dark/30 rounded-xl border border-gray-800">

@@ -48,8 +48,9 @@ def log_tool_call(func: Callable) -> Callable:
             result = func(*args, **kwargs)
             
             result_str = str(result)
+            len_result_str = len(result_str)
             # Log tool end
-            logger.info(f"[TOOL END] {tool_name}: {result_str[:100]}(truncated)...")
+            logger.info(f"[TOOL END] {tool_name}: {result_str[:100]} {'(truncated)' if len_result_str > 100 else ''}")
             
             # Store tool call in Redis if request_id is available
             if request_id:

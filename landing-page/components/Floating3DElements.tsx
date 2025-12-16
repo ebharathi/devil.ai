@@ -77,7 +77,7 @@ function FloatingTorus() {
   )
 }
 
-function DevilText() {
+function AIText() {
   const meshRef = useRef<THREE.Mesh>(null)
   
   useFrame((state) => {
@@ -101,10 +101,10 @@ function DevilText() {
         bevelOffset={0}
         bevelSegments={5}
       >
-        DEVIL
+        AI
         <meshStandardMaterial 
-          color="#EF4444" 
-          emissive="#EF4444"
+          color="#7C3AED" 
+          emissive="#7C3AED"
           emissiveIntensity={0.8}
           metalness={0.9}
           roughness={0.1}
@@ -126,7 +126,7 @@ export default function Floating3DElements() {
         <FloatingCube />
         <FloatingSphere />
         <FloatingTorus />
-        <DevilText />
+        <AIText />
       </Canvas>
     </div>
   )
