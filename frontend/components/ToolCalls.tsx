@@ -6,15 +6,19 @@ import { useState } from 'react'
 interface ToolCallsProps {
   toolCalls: ToolCall[]
   requestId: string
+  isActive?: boolean
 }
 
-export default function ToolCalls({ toolCalls, requestId }: ToolCallsProps) {
+export default function ToolCalls({ toolCalls, requestId, isActive = false }: ToolCallsProps) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
 
   if (!toolCalls || toolCalls.length === 0) {
+    if(isActive) return null;
     return (
       <div className="mt-4 p-4 bg-muted rounded-lg border border-border">
-        <p className="text-sm text-muted-foreground">No tool calls found for this request.</p>
+        <p className="text-sm text-muted-foreground">
+          No tool calls found.
+        </p>
       </div>
     )
   }
@@ -65,13 +69,13 @@ export default function ToolCalls({ toolCalls, requestId }: ToolCallsProps) {
             <div className="px-4 pb-4 space-y-3 border-t border-border">
               <div>
                 <div className="text-xs font-medium text-muted-foreground mb-1">Input:</div>
-                <pre className="text-xs text-foreground bg-background p-2 rounded border border-border overflow-x-auto">
+                <pre className="text-xs text-foreground bg-background p-2 rounded border border-border whitespace-pre-wrap break-words overflow-x-auto">
                   {call.input}
                 </pre>
               </div>
               <div>
                 <div className="text-xs font-medium text-muted-foreground mb-1">Output:</div>
-                <pre className="text-xs text-foreground bg-background p-2 rounded border border-border overflow-x-auto max-h-64 overflow-y-auto">
+                <pre className="text-xs text-foreground bg-background p-2 rounded border border-border whitespace-pre-wrap break-words max-h-64 overflow-y-auto">
                   {call.output}
                 </pre>
               </div>

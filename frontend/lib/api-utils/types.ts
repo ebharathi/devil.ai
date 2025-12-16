@@ -10,6 +10,7 @@ export interface SessionsResponse {
 export interface QueryRequest {
   query: string
   session_id?: string
+  request_id?: string
 }
 
 export interface QueryResponse {

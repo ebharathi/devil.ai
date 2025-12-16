@@ -11,6 +11,7 @@ router = APIRouter()
 class QueryRequest(BaseModel):
     query: str
     session_id: Optional[str] = None
+    request_id: Optional[str] = None
 
 
 class QueryResponse(BaseModel):
@@ -81,8 +82,11 @@ def ask(request: QueryRequest, x_session_id: Optional[str] = Header(None, alias=
     if not session_id:
         session_id = generate_cuid()
     
+    # Use request_id from frontend if provided, otherwise process_query will generate one
+    request_id = request.request_id
+    
     try:
-        response, session_id, request_id = process_query(session_id, request.query)
+        response, session_id, request_id = process_query(session_id, request.query, request_id=request_id)
         return QueryResponse(response=response, session_id=session_id, request_id=request_id)
     except Exception as e:
         from utils.logger import log_conversation

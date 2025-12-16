@@ -10,6 +10,15 @@ import ThemeToggle from '@/components/ThemeToggle'
 import { Message } from '@/types'
 import { sendMessage, getHistory } from '@/lib/api-utils'
 
+// Generate UUID v4
+function generateUUID(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
 export default function Home() {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -17,6 +26,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [currentRequestId, setCurrentRequestId] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -59,6 +69,10 @@ export default function Home() {
   const handleSendMessage = async (content: string) => {
     if (!content.trim() || isLoading) return
 
+    // Generate UUID for this request
+    const requestId = generateUUID()
+    setCurrentRequestId(requestId)
+
     const userMessage: Message = {
       id: `${Date.now()}-user-${Math.random().toString(36).substr(2, 9)}`,
       role: 'user',
@@ -70,9 +84,8 @@ export default function Home() {
     setIsLoading(true)
 
     try {
-      // Send message with current session_id (or null if first message)
-      // Backend will generate CUID if session_id is not provided
-      const data = await sendMessage(content, sessionId || undefined)
+      // Send message with current session_id and request_id
+      const data = await sendMessage(content, sessionId || undefined, requestId)
       
       // Always update session ID from backend response
       if (data.session_id) {
@@ -89,6 +102,7 @@ export default function Home() {
       }
 
       setMessages(prev => [...prev, assistantMessage])
+      setCurrentRequestId(null) // Clear current request ID after response
     } catch (error) {
       console.error('Error sending message:', error)
       const errorMessage: Message = {
@@ -98,6 +112,7 @@ export default function Home() {
         timestamp: new Date().toISOString()
       }
       setMessages(prev => [...prev, errorMessage])
+      setCurrentRequestId(null)
     } finally {
       setIsLoading(false)
     }
@@ -184,11 +199,35 @@ export default function Home() {
               <EmptyState onSuggestionClick={handleSuggestionClick} />
             ) : (
               <div className="space-y-6">
-                {messages.map((message) => (
-                  <ChatMessage key={message.id} message={message} />
-                ))}
-                {isLoading && (
-                  <div className="flex items-center gap-3">
+                {messages.map((message, index) => {
+                  // Check if this is the last message and we're loading
+                  const isLastMessage = index === messages.length - 1
+                  const isActive = isLoading && isLastMessage && message.role === 'assistant' && message.requestId === currentRequestId
+                  
+                  return (
+                    <ChatMessage 
+                      key={message.id} 
+                      message={message}
+                      isActive={isActive}
+                      requestId={isActive ? currentRequestId : undefined}
+                    />
+                  )
+                })}
+                {isLoading && currentRequestId && (
+                  <ChatMessage
+                    message={{
+                      id: `temp-${currentRequestId}`,
+                      role: 'assistant',
+                      content: '',
+                      timestamp: new Date().toISOString(),
+                      requestId: currentRequestId
+                    }}
+                    isActive={true}
+                    requestId={currentRequestId}
+                  />
+                )}
+                {isLoading && !currentRequestId && (
+                  <div className="flex items-center gap-3 mb-6">
                     <div className="w-8 h-8 bg-foreground/10 rounded-full flex items-center justify-center flex-shrink-0">
                       <span className="text-sm font-medium text-foreground">A</span>
                     </div>
