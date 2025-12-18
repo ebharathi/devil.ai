@@ -27,9 +27,7 @@ if SAFE_MODE_ENABLED:
 Dangerous commands (rm -rf, sudo, format, etc.) are automatically blocked.
 Only safe commands are allowed. You cannot bypass this protection."""
 else:
-    SYSTEM_PROMPT = BASE_SYSTEM_PROMPT + """
-
-SAFE_MODE is disabled. You have full access to all commands."""
+    SYSTEM_PROMPT = BASE_SYSTEM_PROMPT 
 
 _agent_instance = None
 
